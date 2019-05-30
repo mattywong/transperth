@@ -7,10 +7,6 @@ const load = filePath => async (req, res, next) => {
   importedModule.default(req, res, next);
 };
 
-// router.use("/transperth", async (req, res, next) => {
-//   const importedModule = await import("./transperth");
-//   importedModule.default(req, res, next);
-// });
 router.use("/transperth", load("./transperth"));
 
 export default router;
