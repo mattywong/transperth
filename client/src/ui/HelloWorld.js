@@ -1,5 +1,4 @@
 import React from "react";
-import { hot } from "react-hot-loader/root";
 
-const HelloWorld = props => <div>Hello World</div>;
+const HelloWorld = props => <div>the tes ox</div>;
 export default HelloWorld;

@@ -15,7 +15,9 @@ const compiler = webpack(config);
 
 const createWatcher = pathName => {
   const chokidar = require("chokidar");
-  const watcher = chokidar.watch(pathName);
+  const watcher = chokidar.watch(path.resolve(__dirname, pathName));
+
+  // remove leading './' from pathName "./clients" => "clients"
   const cacheIdentifier = pathName.substring(2);
   const regex = new RegExp(`[/\\\\]${cacheIdentifier}[/\\\\]`);
 
@@ -25,6 +27,7 @@ const createWatcher = pathName => {
       Object.keys(require.cache).forEach(id => {
         if (regex.test(id)) {
           delete require.cache[id];
+          console.log("Deleted module %s", id);
         }
       });
     });
@@ -38,7 +41,7 @@ async function start() {
   // setup watch on server and client
   if (!isProduction) {
     createWatcher("./server");
-    // createWatcher("./client");
+    createWatcher("./client");
 
     // Do "hot-reloading" of react stuff on the server
     // Throw away the cached client modules and let them be re-required next time
@@ -64,29 +67,13 @@ async function start() {
   // parse application/json
   app.use(bodyParser.json());
 
-  // public
+  // public folder
   app.use("/", express.static(path.resolve(__dirname, "./wwwroot")));
 
-  // hot reloaded server routes
+  // hot reloaded server routes and everything else
   app.use(async (req, res, next) => {
     const importedModule = await import("./server");
     importedModule.default(req, res, next);
-  });
-
-  app.get("*", async (req, res, next) => {
-    import("./server-render")
-      .then(importedModule => {
-        importedModule.default(req.path, (err, page) => {
-          if (err) {
-            return next(err);
-          }
-
-          res.send(page);
-        });
-      })
-      .catch(err => {
-        return next(err);
-      });
   });
 
   // error handling
