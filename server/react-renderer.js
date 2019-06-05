@@ -1,13 +1,13 @@
 import React from "react";
 import express from "express";
 import path from "path";
-import { renderToString, renderToNodeStream } from "react-dom/server";
+import { renderToNodeStream } from "react-dom/server";
 import { ServerStyleSheet } from "styled-components";
 
-import fs from "fs";
+// import fs from "fs";
 
 const _path = path.resolve(__dirname, "../client/index.html");
-const template = fs.readFileSync(_path, "utf8");
+// const template = fs.readFileSync(_path, "utf8");
 const router = express.Router();
 
 router.get("/", async (req, res, next) => {
@@ -26,19 +26,12 @@ router.get("/", async (req, res, next) => {
         { end: false }
       );
 
-      stream.on("end", () => res.end("</body></html>"));
+      stream.on("end", () => {
+        res.write("</div>");
+        res.write(`<script src="/bundle.js"></script>`);
 
-      //   console.log(styleTags);
-      // } catch (error) {
-      //   // handle error
-      //   console.error(error);
-      // } finally {
-      //   sheet.seal();
-      // }
-
-      // let page = template.replace("<!-- CONTENT -->", html);
-      // page = page.replace("<!-- STYLES -->", styleTags);
-      // res.send(page);
+        res.end("</body></html>");
+      });
     })
     .catch(next);
 });
