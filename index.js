@@ -3,6 +3,8 @@ import http from "http";
 import path from "path";
 import bodyParser from "body-parser";
 
+import compression from "compression";
+
 import webpackDevMiddleware from "webpack-dev-middleware";
 import webpackHotMiddleware from "webpack-hot-middleware";
 
@@ -63,6 +65,8 @@ async function start() {
     );
     app.use(webpackHotMiddleware(compiler));
   }
+
+  app.use(compression());
 
   app.use(bodyParser.urlencoded({ extended: false }));
 

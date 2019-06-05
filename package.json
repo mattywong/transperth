@@ -12,6 +12,7 @@
   "dependencies": {
     "@babel/runtime": "^7.4.5",
     "body-parser": "^1.19.0",
+    "compression": "^1.7.4",
     "dayjs": "^1.8.14",
     "express": "^4.16.4",
     "fs-extra": "^8.0.1",
