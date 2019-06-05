@@ -12,13 +12,13 @@ const Carousel = styled.div`
 Carousel.Slide = styled.div`
   flex: 0 0 300px;
   height: 300px;
-  background: red;
+  background: green;
 `;
 
 const HelloWorld = props => {
   return (
     <Carousel>
-      <Carousel.Slide />
+      <Carousel.Slide onClick={e => alert("ayyeee")} />
       <Carousel.Slide />
       <Carousel.Slide />
     </Carousel>

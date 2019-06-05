@@ -9,6 +9,9 @@ export default [
   {
     mode: process.env.NODE_ENV,
     target: "node",
+    node: {
+      __dirname: false
+    },
     externals: [nodeExternals()],
     devtool: "eval-source-map",
     entry: { server: "./index" },

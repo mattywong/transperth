@@ -9,7 +9,7 @@ export default {
       ? ["webpack-hot-middleware/client", "./client/index.js"]
       : ["./client/index.js"],
   output: {
-    path: path.resolve(__dirname, "./dist"),
+    path: path.resolve(__dirname, "./dist/wwwroot"),
     filename: "bundle.js",
     publicPath: "/"
   },
