@@ -1,6 +1,6 @@
 import webpack from "webpack";
-import webpackServerConfig from "../webpack.config.server.js"; // <-- Contains ES6+
-import webpackClientConfig from "../webpack.config.js"; // <-- Contains ES6+
+import webpackServerConfig from "../webpack.config.server.js";
+import webpackClientConfig from "../webpack.config.client.prod.js";
 
 process.env.NODE_ENV = "production";
 

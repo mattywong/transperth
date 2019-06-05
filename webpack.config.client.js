@@ -2,21 +2,15 @@ import webpack from "webpack";
 import path from "path";
 
 export default {
-  mode: process.env.NODE_ENV || "development",
+  mode: "development",
   devtool: "eval-source-map",
-  entry:
-    process.env.NODE_ENV !== "production"
-      ? ["webpack-hot-middleware/client", "./client/index.js"]
-      : ["./client/index.js"],
+  entry: ["webpack-hot-middleware/client", "./client/index.js"],
   output: {
     path: path.resolve(__dirname, "./dist/wwwroot"),
     filename: "bundle.js",
     publicPath: "/"
   },
-  plugins:
-    process.env.NODE_ENV !== "production"
-      ? [new webpack.HotModuleReplacementPlugin()]
-      : [],
+  plugins: [new webpack.HotModuleReplacementPlugin()],
   module: {
     rules: [
       {
@@ -26,11 +20,8 @@ export default {
         use: {
           loader: "babel-loader",
           options: {
-            presets: ["@babel/preset-react"],
-            plugins:
-              process.env.NODE_ENV === "development"
-                ? ["react-hot-loader/babel"]
-                : []
+            presets: ["@babel/preset-react", ["@babel/preset-env"]],
+            plugins: ["react-hot-loader/babel"]
           }
         }
       }

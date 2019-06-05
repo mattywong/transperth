@@ -7,7 +7,7 @@ import webpackDevMiddleware from "webpack-dev-middleware";
 import webpackHotMiddleware from "webpack-hot-middleware";
 
 import webpack from "webpack";
-import config from "./webpack.config.js";
+import config from "./webpack.config.client.js";
 
 const isProduction = process.env.NODE_ENV === "production";
 

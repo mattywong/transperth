@@ -26,13 +26,25 @@ export default [
           test: /\.js$/,
           exclude: /(node_modules|bower_components)/,
           use: {
-            loader: "babel-loader"
+            loader: "babel-loader",
+            options: {
+              presets: ["@babel/preset-react", ["@babel/preset-env"]],
+              plugins: [
+                [
+                  "babel-plugin-styled-components",
+                  {
+                    displayName: false
+                  }
+                ],
+                "@babel/plugin-transform-runtime",
+                "dynamic-import-node"
+              ]
+            }
           }
         }
       ]
     },
     plugins: [
-      //   new ExtractTextPlugin("[name].css"),
       new webpack.DefinePlugin({
         "process.env": { NODE_ENV: JSON.stringify(process.env.NODE_ENV) }
       }),

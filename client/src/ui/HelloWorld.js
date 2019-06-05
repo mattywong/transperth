@@ -12,7 +12,7 @@ const Carousel = styled.div`
 Carousel.Slide = styled.div`
   flex: 0 0 300px;
   height: 300px;
-  background: green;
+  background: orange;
 `;
 
 const HelloWorld = props => {
