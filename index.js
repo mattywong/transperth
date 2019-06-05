@@ -48,7 +48,9 @@ async function start() {
     compiler.plugin("done", function() {
       console.log("Clearing /client/ module cache from server");
       Object.keys(require.cache).forEach(function(id) {
-        if (/[\/\\]client[\/\\]/.test(id)) delete require.cache[id];
+        if (/[\/\\]client[\/\\]/.test(id)) {
+          delete require.cache[id];
+        }
       });
     });
 
