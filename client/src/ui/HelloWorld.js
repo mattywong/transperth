@@ -1,27 +1,23 @@
 import React from "react";
 import styled from "styled-components";
 
-const Carousel = styled.div`
-  width: 100%;
-  height: 100vh;
-  display: flex;
-  background-color: blue;
-  overflow: auto;
-`;
-
-Carousel.Slide = styled.div`
-  flex: 0 0 300px;
-  height: 300px;
-  background: orange;
-`;
-
 const HelloWorld = props => {
+  const [state, setState] = React.useState(0);
+
+  const increment = React.useCallback(() => {
+    setState(state + 1);
+  }, [state, setState]);
+
+  const decrement = React.useCallback(() => {
+    setState(state - 1);
+  }, [state, setState]);
+
   return (
-    <Carousel>
-      <Carousel.Slide onClick={e => alert("ayyeee")} />
-      <Carousel.Slide />
-      <Carousel.Slide />
-    </Carousel>
+    <div>
+      <button onClick={increment}>Add</button>
+      {state}
+      <button onClick={decrement}>Minus</button>
+    </div>
   );
 };
 export default HelloWorld;

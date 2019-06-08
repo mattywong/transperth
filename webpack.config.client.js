@@ -10,6 +10,11 @@ export default {
     filename: "bundle.js",
     publicPath: "/"
   },
+  resolve: {
+    alias: {
+      "react-dom": "@hot-loader/react-dom"
+    }
+  },
   plugins: [new webpack.HotModuleReplacementPlugin()],
   module: {
     rules: [

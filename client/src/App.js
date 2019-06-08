@@ -35,13 +35,11 @@ const App = ({ location, context }) => {
     <Router location={location} context={context}>
       <GlobalStyle />
       <Link to="/">Home</Link>
-      <Link to="/users">Users</Link>
-      <Link to="/about">About</Link>
+      <Link to="/hello">Users</Link>
 
       <Switch>
         <Route path="/" exact render={() => <p>Home</p>} />
-        <Route path="/about/" render={() => <p>about</p>} />
-        <Route path="/users/" component={HelloWorld} />
+        <Route path="/hello/" component={HelloWorld} />
         <Route render={() => <Status code={404}>Not found</Status>} />
       </Switch>
     </Router>
