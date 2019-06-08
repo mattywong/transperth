@@ -8,7 +8,7 @@ import webpackHotMiddleware from "webpack-hot-middleware";
 import webpack from "webpack";
 import config from "./webpack.config.client.js";
 
-const isProduction = process.env.NODE_ENV === "production";
+import serverRouter from "./server";
 
 const compiler = webpack(config);
 
@@ -33,34 +33,20 @@ const createWatcher = pathName => {
   });
 };
 
-const devServer = async (req, res, next) => {
-  const importedModule = await import("./server");
-  importedModule.default(req, res, next);
-};
-
-const productionServer = () => {
-  let cachedModule;
-
-  return async (req, res, next) => {
-    if (cachedModule) {
-      console.log("returning cached server");
-      return cachedModule.default(req, res, next);
-    }
-
-    const importedModule = await import("./server");
-
-    cachedModule = importedModule;
-
-    importedModule.default(req, res, next);
-  };
-};
+const appRouter =
+  process.env.NODE_ENV === "production"
+    ? serverRouter
+    : async (req, res, next) => {
+        const importedModule = await import("./server");
+        importedModule.default(req, res, next);
+      };
 
 async function start() {
   const app = express();
   const server = http.createServer(app);
 
   // setup watch on server and client
-  if (!isProduction) {
+  if (process.env.NODE_ENV !== "production") {
     createWatcher("./server");
     createWatcher("./client");
 
@@ -86,7 +72,7 @@ async function start() {
   }
 
   // hot reloaded server routes and everything else
-  app.use(isProduction ? productionServer() : devServer);
+  app.use(appRouter);
 
   server.on("error", console.error);
 

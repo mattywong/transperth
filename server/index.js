@@ -3,12 +3,10 @@ import bodyParser from "body-parser";
 import path from "path";
 import compression from "compression";
 
-const router = express.Router();
+import transperth from "./transperth";
+import reactRenderer from "./react-renderer";
 
-const load = filePath => async (req, res, next) => {
-  const importedModule = await import(filePath);
-  importedModule.default(req, res, next);
-};
+const router = express.Router();
 
 router.use(compression());
 
@@ -25,10 +23,12 @@ const wwwrootPath =
 
 router.use("/", express.static(wwwrootPath));
 
-router.use("/transperth", load("./transperth"));
+
+router.use("/transperth", transperth);
+
 
 // react router will take over
-router.use("*", load("./react-renderer"));
+router.use("*", reactRenderer);
 
 // error handling
 router.use(async (err, req, res, next) => {
