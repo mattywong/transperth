@@ -1,11 +1,14 @@
-import React from "react";
-import ReactDOM from "react-dom";
+import * as React from "react";
+import * as ReactDOM from "react-dom";
 import App from "./src/App";
-import { BrowserRouter } from "react-router-dom";
+// ReactDOM.hydrate(
+//   <BrowserRouter>
 
-ReactDOM.hydrate(
-  <BrowserRouter>
-    <App />
-  </BrowserRouter>,
-  document.getElementById("root")
-);
+//   </BrowserRouter>,
+//   document.getElementById("root")
+// );
+
+window.React = React;
+window.ReactDOM = ReactDOM;
+window.__CLIENT__ = {};
+window.__CLIENT__.App = App;

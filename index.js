@@ -1,9 +1,6 @@
 import express from "express";
 import http from "http";
 import path from "path";
-import bodyParser from "body-parser";
-
-import compression from "compression";
 
 import webpackDevMiddleware from "webpack-dev-middleware";
 import webpackHotMiddleware from "webpack-hot-middleware";
@@ -36,6 +33,28 @@ const createWatcher = pathName => {
   });
 };
 
+const devServer = async (req, res, next) => {
+  const importedModule = await import("./server");
+  importedModule.default(req, res, next);
+};
+
+const productionServer = () => {
+  let cachedModule;
+
+  return async (req, res, next) => {
+    if (cachedModule) {
+      console.log("returning cached server");
+      return cachedModule.default(req, res, next);
+    }
+
+    const importedModule = await import("./server");
+
+    cachedModule = importedModule;
+
+    importedModule.default(req, res, next);
+  };
+};
+
 async function start() {
   const app = express();
   const server = http.createServer(app);
@@ -66,32 +85,8 @@ async function start() {
     app.use(webpackHotMiddleware(compiler));
   }
 
-  app.use(compression());
-
-  app.use(bodyParser.urlencoded({ extended: false }));
-
-  // parse application/json
-  app.use(bodyParser.json());
-
-  // public folder
-  app.use("/", express.static(path.resolve(__dirname, "./wwwroot")));
-
   // hot reloaded server routes and everything else
-  app.use(async (req, res, next) => {
-    const importedModule = await import("./server");
-    importedModule.default(req, res, next);
-  });
-
-  // error handling
-  app.use(async (err, req, res, next) => {
-    // logic
-    console.log(err);
-    res.status = err.status || 500;
-    res.json({
-      ...err,
-      message: err.message
-    });
-  });
+  app.use(isProduction ? productionServer() : devServer);
 
   server.on("error", console.error);
 
