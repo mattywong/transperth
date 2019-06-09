@@ -44,11 +44,7 @@ import serialize from "serialize-javascript";
 //     .catch(next);
 // };
 
-export const renderReactAppToString = ({ template }) => async (
-  req,
-  res,
-  next
-) => {
+export const renderReactAppToString = () => async (req, res, next) => {
   const _template = `
   <!DOCTYPE html>
   <html>
@@ -68,7 +64,7 @@ export const renderReactAppToString = ({ template }) => async (
     </body>
   </html>
   `;
-  
+
   const state = res.locals;
 
   await import("../../client/src/App.js")

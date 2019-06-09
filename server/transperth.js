@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.get("/transperth", transperthMiddleware);
 router.get("/api/transperth", transperthMiddleware, async (req, res, next) => {
-  res.json(res.locals);
+  res.json(res.locals.transperth);
 });
 
 export default router;

@@ -1,12 +1,12 @@
-import webpack from "webpack";
-import path from "path";
+const webpack = require("webpack");
+const path = require("path");
 
-export default {
+module.exports = {
   mode: "production",
   devtool: "eval-source-map",
   entry: ["./client/index.js"],
   output: {
-    path: path.resolve(__dirname, "./dist/wwwroot"),
+    path: path.resolve(__dirname, "./wwwroot"),
     filename: "bundle.js",
     publicPath: "/"
   },

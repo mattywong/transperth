@@ -4,8 +4,9 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "start": "babel-node ./server/index.js --inspect",
-    "start:prod": "node ./dist/server.js",
+    "start": "babel-node ./index.js --inspect",
+    "start:prod": "cross-env NODE_ENV=production node ./index.js",
+    "prestart:prod": "npm run build",
     "prebuild": "babel-node ./scripts/prebuild.js",
     "build": "babel-node ./scripts/build.js"
   },
@@ -39,6 +40,7 @@
     "babel-plugin-dynamic-import-node": "^2.2.0",
     "babel-plugin-styled-components": "^1.10.0",
     "chokidar": "^3.0.0",
+    "cross-env": "^5.2.0",
     "eslint": "5.x",
     "eslint-config-react-app": "^4.0.1",
     "eslint-plugin-flowtype": "2.x",

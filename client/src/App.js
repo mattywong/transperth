@@ -17,8 +17,30 @@ import ServerContext from "./state/ServerContext";
 
 const Router = typeof window === "undefined" ? StaticRouter : BrowserRouter;
 
-const App = ({ location, context, state }) => {
-  console.log(state);
+const reducer = (state, action) => {
+  switch (action.type) {
+    case "DELETE_SERVER_STATE":
+      const nextState = { ...state };
+      delete nextState[action.payload.key];
+      return nextState;
+    default:
+      return state;
+  }
+};
+
+const App = ({ location, context, state: ServerState }) => {
+  const [state, dispatch] = React.useReducer(reducer, ServerState);
+
+  const deleteStateKey = React.useCallback(
+    key =>
+      dispatch({
+        type: "DELETE_SERVER_STATE",
+        payload: {
+          key
+        }
+      }),
+    [dispatch]
+  );
 
   const GlobalStyle = createGlobalStyle`
     body {
@@ -28,11 +50,11 @@ const App = ({ location, context, state }) => {
 `;
 
   return (
-    <ServerContext.Provider value={{ ...state }}>
+    <ServerContext.Provider value={{ ...state, deleteStateKey }}>
       <Router location={location} context={context}>
         <GlobalStyle />
         <Link to="/">Home</Link>
-        <Link to="/hello">Users</Link>
+        <Link to="/transperth">Users</Link>
         <Switch>
           <Route path="/" exact render={() => <p>Home</p>} />
           <Route path="/transperth/" component={Transperth} />
