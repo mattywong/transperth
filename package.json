@@ -4,7 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "start": "babel-node index.js --inspect",
+    "start": "babel-node ./server/index.js --inspect",
     "start:prod": "node ./dist/server.js",
     "prebuild": "babel-node ./scripts/prebuild.js",
     "build": "babel-node ./scripts/build.js"

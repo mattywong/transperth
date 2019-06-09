@@ -5,52 +5,70 @@ import path from "path";
 
 import { renderToString, renderToNodeStream } from "react-dom/server";
 import { ServerStyleSheet } from "styled-components";
-import { StaticRouter } from "react-router-dom";
 
 import serialize from "serialize-javascript";
 
-export const renderReactAppToNodeStream = async (req, res, next) => {
-  res.write("<!DOCTYPE html><html><head><title>My Page</title></head><body>");
-  res.write("<div id='root'>");
+// export const renderReactAppToNodeStream = async (req, res, next) => {
+//   res.write("<!DOCTYPE html><html><head><title>My Page</title></head><body>");
+//   res.write("<div id='root'>");
 
-  await import("../../client/src/App.js")
-    .then(Component => {
-      const context = {};
-      const sheet = new ServerStyleSheet();
+//   await import("../../client/src/App.js")
+//     .then(Component => {
+//       const context = {};
+//       const sheet = new ServerStyleSheet();
 
-      const jsx = sheet.collectStyles(
-        <StaticRouter location={req.originalUrl} context={context}>
-          <Component.default />
-        </StaticRouter>
-      );
+//       const jsx = sheet.collectStyles(
+//         <StaticRouter location={req.originalUrl} context={context}>
+//           <Component.default />
+//         </StaticRouter>
+//       );
 
-      const stream = sheet.interleaveWithNodeStream(renderToNodeStream(jsx));
+//       const stream = sheet.interleaveWithNodeStream(renderToNodeStream(jsx));
 
-      stream.pipe(
-        res,
-        { end: false }
-      );
+//       stream.pipe(
+//         res,
+//         { end: false }
+//       );
 
-      stream.on("end", () => {
-        console.log(context);
-        console.log(res);
-        // res.status(context.status || 200);
+//       stream.on("end", () => {
+//         console.log(context);
+//         console.log(res);
+//         // res.status(context.status || 200);
 
-        res.write("</div>");
-        res.write(`<script src="/bundle.js"></script>`);
-        res.write("</body></html>");
-        return res.end();
-      });
-    })
-    .catch(next);
-};
+//         res.write("</div>");
+//         res.write(`<script src="/bundle.js"></script>`);
+//         res.write("</body></html>");
+//         return res.end();
+//       });
+//     })
+//     .catch(next);
+// };
 
-export const renderReactAppToString = async (req, res, next) => {
-  const template = await fs.readFile(
-    path.resolve(__dirname, "../client/index.html"),
-    "utf8"
-  );
-
+export const renderReactAppToString = ({ template }) => async (
+  req,
+  res,
+  next
+) => {
+  const _template = `
+  <!DOCTYPE html>
+  <html>
+    <head>
+      <meta charset="utf-8" />
+      <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+      <title>Page Title</title>
+      <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+      <!-- STYLES -->
+    </head>
+    <body>
+      <div id="root"><!-- CONTENT --></div>
+      <script src="/bundle.js"></script>
+  
+      <!-- SCRIPTS -->
+    </body>
+  </html>
+  `;
+  
   const state = res.locals;
 
   await import("../../client/src/App.js")
@@ -82,7 +100,7 @@ export const renderReactAppToString = async (req, res, next) => {
           </script>
             `;
 
-        const html = template
+        const html = _template
           .replace("<!-- STYLES -->", styleTags)
           .replace("<!-- CONTENT -->", app)
           .replace("<!-- SCRIPTS -->", scripts);

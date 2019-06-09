@@ -14,11 +14,11 @@ export default [
     },
     externals: [nodeExternals()],
     devtool: "eval-source-map",
-    entry: { server: "./index" },
+    entry: { server: "./server/index" },
     output: {
       path: path.resolve(__dirname, "./dist"),
       filename: "[name].js",
-      publicPath: "../"
+      publicPath: "./"
     },
     module: {
       rules: [
