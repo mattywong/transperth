@@ -2,16 +2,29 @@ const webpack = require("webpack");
 const path = require("path");
 const TerserPlugin = require("terser-webpack-plugin");
 
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+
 module.exports = {
   mode: "production",
   devtool: "eval-source-map",
-  entry: ["./client/index.js"],
+  entry: { app: "./client/index.js" },
   output: {
     path: path.resolve(__dirname, "./wwwroot/build"),
-    filename: "bundle.js",
+    filename: "[name].min.js",
     publicPath: "/"
   },
   optimization: {
+    runtimeChunk: {
+      name: "runtime"
+    },
+    splitChunks: {
+      cacheGroups: {
+        vendor: {
+          test: /node_modules/,
+          name: "vendor"
+        }
+      }
+    },
     minimizer: [
       new TerserPlugin({
         terserOptions: {
@@ -36,7 +49,12 @@ module.exports = {
       })
     ]
   },
-  plugins: [],
+  plugins: [
+    new CleanWebpackPlugin(),
+    new webpack.DefinePlugin({
+      "process.env.NODE_ENV": JSON.stringify(process.env.NODE_ENV)
+    })
+  ],
   module: {
     rules: [
       {

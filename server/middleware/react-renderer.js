@@ -44,31 +44,11 @@ import serialize from "serialize-javascript";
 //     .catch(next);
 // };
 
-export const renderReactAppToString = () => async (req, res, next) => {
-  const _template = `
-  <!DOCTYPE html>
-  <html>
-    <head>
-      <meta charset="utf-8" />
-      <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-      <title>Page Title</title>
-      <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
-      <!-- STYLES -->
-    </head>
-    <body>
-      <div id="root"><!-- CONTENT --></div>
-      ${
-        process.env.NODE_ENV === "production"
-          ? `<script src="/build/bundle.js"></script>`
-          : `<script src="/build/bundle.js"></script>`
-      }
-
-      <!-- SCRIPTS -->
-    </body>
-  </html>
-  `;
-
+export const renderReactAppToString = ({ template }) => async (
+  req,
+  res,
+  next
+) => {
   const state = res.locals;
 
   await import("../../client/src/App.js")
@@ -100,7 +80,7 @@ export const renderReactAppToString = () => async (req, res, next) => {
           </script>
             `;
 
-        const html = _template
+        const html = template
           .replace("<!-- STYLES -->", styleTags)
           .replace("<!-- CONTENT -->", app)
           .replace("<!-- SCRIPTS -->", scripts);

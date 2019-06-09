@@ -2,8 +2,6 @@ import webpack from "webpack";
 import webpackServerConfig from "../webpack.config.server.js";
 import webpackClientConfig from "../webpack.config.client.prod.js";
 
-process.env.NODE_ENV = "production";
-
 const outputErrors = (err, stats) => {
   if (err) {
     console.error(err.stack || err);
