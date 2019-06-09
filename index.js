@@ -38,8 +38,6 @@ const appRouter =
         importedModule.default(req, res, next);
       };
 
-console.log(appRouter);
-
 async function start() {
   const app = express();
   const server = http.createServer(app);

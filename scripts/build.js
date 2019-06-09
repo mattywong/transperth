@@ -4,14 +4,30 @@ import webpackClientConfig from "../webpack.config.client.prod.js";
 
 process.env.NODE_ENV = "production";
 
+const outputErrors = (err, stats) => {
+  if (err) {
+    console.error(err.stack || err);
+    if (err.details) {
+      console.error(err.details);
+    }
+    return;
+  }
+
+  const info = stats.toJson();
+  if (stats.hasErrors()) {
+    console.error(info.errors);
+  }
+  if (stats.hasWarnings()) {
+    console.warn(info.warnings);
+  }
+};
+
 const serverCompiler = webpack(webpackServerConfig);
 serverCompiler.run((err, stats) => {
-  console.log(err);
-//   console.log(stats);
+  outputErrors(err, stats);
 });
 
 const clientCompiler = webpack(webpackClientConfig);
 clientCompiler.run((err, stats) => {
-  console.log(err);
-//   console.log(stats);
+  outputErrors(err, stats);
 });

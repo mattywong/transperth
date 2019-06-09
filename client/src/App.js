@@ -17,18 +17,21 @@ import ServerContext from "./state/ServerContext";
 
 const Router = typeof window === "undefined" ? StaticRouter : BrowserRouter;
 
-const reducer = (state, action) => {
-  switch (action.type) {
-    case "DELETE_SERVER_STATE":
-      const nextState = { ...state };
-      delete nextState[action.payload.key];
-      return nextState;
-    default:
-      return state;
-  }
-};
+const useServerState = ServerState => {
+  const reducer = (state, action) => {
+    switch (action.type) {
+      case "DELETE_SERVER_STATE":
+        if (state[action.payload.key]) {
+          const nextState = { ...state };
+          delete nextState[action.payload.key];
+          return nextState;
+        }
+        return state;
+      default:
+        return state;
+    }
+  };
 
-const App = ({ location, context, state: ServerState }) => {
   const [state, dispatch] = React.useReducer(reducer, ServerState);
 
   const deleteStateKey = React.useCallback(
@@ -42,6 +45,15 @@ const App = ({ location, context, state: ServerState }) => {
     [dispatch]
   );
 
+  return {
+    state,
+    deleteStateKey
+  };
+};
+
+const App = ({ location, context, state: ServerState }) => {
+  const { state, deleteStateKey } = useServerState(ServerState);
+
   const GlobalStyle = createGlobalStyle`
     body {
         background: beige;
@@ -54,7 +66,8 @@ const App = ({ location, context, state: ServerState }) => {
       <Router location={location} context={context}>
         <GlobalStyle />
         <Link to="/">Home</Link>
-        <Link to="/transperth">Users</Link>
+        <Link to="/transperth">Transperth</Link>
+        <Link to="/404">404</Link>
         <Switch>
           <Route path="/" exact render={() => <p>Home</p>} />
           <Route path="/transperth/" component={Transperth} />

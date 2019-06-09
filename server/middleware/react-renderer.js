@@ -58,8 +58,12 @@ export const renderReactAppToString = () => async (req, res, next) => {
     </head>
     <body>
       <div id="root"><!-- CONTENT --></div>
-      <script src="/bundle.js"></script>
-  
+      ${
+        process.env.NODE_ENV === "production"
+          ? `<script src="/build/bundle.js"></script>`
+          : `<script src="/build/bundle.js"></script>`
+      }
+
       <!-- SCRIPTS -->
     </body>
   </html>

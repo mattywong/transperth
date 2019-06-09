@@ -32,7 +32,6 @@ const reducer = (state, action) => {
 const Transperth = props => {
   const serverState = React.useContext(ServerContext);
 
-  console.log(serverState);
   const [state, dispatch] = React.useReducer(reducer, {
     data: serverState.transperth || null,
     loading: !serverState.transperth,
@@ -45,6 +44,7 @@ const Transperth = props => {
 
   React.useEffect(() => {
     if (data) {
+      // have to delete initial data from server
       deleteStateKey("transperth");
       return;
     }
@@ -70,8 +70,6 @@ const Transperth = props => {
       });
     });
   }, [data, dispatch, deleteStateKey]);
-
-  console.log(state);
 
   if (loading) {
     return <p>LOADING</p>;

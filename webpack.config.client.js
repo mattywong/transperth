@@ -6,9 +6,9 @@ module.exports = {
   devtool: "eval-source-map",
   entry: ["webpack-hot-middleware/client", "./client/index.js"],
   output: {
-    path: path.resolve(__dirname, "./dist/wwwroot"),
+    path: path.resolve(__dirname, "./wwwroot/build"),
     filename: "bundle.js",
-    publicPath: "/"
+    publicPath: "/build"
   },
   resolve: {
     alias: {
