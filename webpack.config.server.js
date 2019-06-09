@@ -16,7 +16,7 @@ export default [
     devtool: "eval-source-map",
     entry: { server: "./index" },
     output: {
-      path: path.join(__dirname, "./dist"),
+      path: path.resolve(__dirname, "./dist"),
       filename: "[name].js",
       publicPath: "../"
     },

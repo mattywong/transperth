@@ -1,5 +1,4 @@
 import React from "react";
-import express from "express";
 
 import fs from "fs-extra";
 import path from "path";
@@ -8,13 +7,13 @@ import { renderToString, renderToNodeStream } from "react-dom/server";
 import { ServerStyleSheet } from "styled-components";
 import { StaticRouter } from "react-router-dom";
 
-const router = express.Router();
+import serialize from "serialize-javascript";
 
-const renderAppToNodeStream = async (req, res, next) => {
+export const renderReactAppToNodeStream = async (req, res, next) => {
   res.write("<!DOCTYPE html><html><head><title>My Page</title></head><body>");
   res.write("<div id='root'>");
 
-  await import("../client/src/App.js")
+  await import("../../client/src/App.js")
     .then(Component => {
       const context = {};
       const sheet = new ServerStyleSheet();
@@ -46,13 +45,15 @@ const renderAppToNodeStream = async (req, res, next) => {
     .catch(next);
 };
 
-const renderAppToString = async (req, res, next) => {
+export const renderReactAppToString = async (req, res, next) => {
   const template = await fs.readFile(
     path.resolve(__dirname, "../client/index.html"),
     "utf8"
   );
 
-  await import("../client/src/App.js")
+  const state = res.locals;
+
+  await import("../../client/src/App.js")
     .then(Component => {
       const context = {};
 
@@ -60,27 +61,31 @@ const renderAppToString = async (req, res, next) => {
       try {
         const app = renderToString(
           sheet.collectStyles(
-            <Component.default location={req.originalUrl} context={context} />
+            <Component.default
+              location={req.originalUrl}
+              context={context}
+              state={state}
+            />
           )
         );
 
         const styleTags = sheet.getStyleTags(); // or sheet.getStyleElement();
 
         const scripts = `
-        <script>
-          ReactDOM.hydrate(
-            React.createElement(window.__CLIENT__.App, {}),
-            document.getElementById("root")
-          )
-        </script>
-          `;
+          <script>
+            ReactDOM.hydrate(
+              React.createElement(window.App, { state: ${serialize(
+                res.locals
+              )} }),
+              document.getElementById("root")
+            )
+          </script>
+            `;
 
         const html = template
           .replace("<!-- STYLES -->", styleTags)
           .replace("<!-- CONTENT -->", app)
           .replace("<!-- SCRIPTS -->", scripts);
-
-        console.log(context);
 
         res.status(context.status || 200);
         res.send(html);
@@ -92,9 +97,3 @@ const renderAppToString = async (req, res, next) => {
     })
     .catch(next);
 };
-
-// router.get("*", async (req, res, next) => {});
-// router.get("*", renderAppToNodeStream);
-router.get("*", renderAppToString);
-
-export default router;

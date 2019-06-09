@@ -4,7 +4,7 @@ import path from "path";
 import compression from "compression";
 
 import transperth from "./transperth";
-import reactRenderer from "./react-renderer";
+import { renderReactAppToString } from "./middleware/react-renderer.js";
 
 const router = express.Router();
 
@@ -23,12 +23,13 @@ const wwwrootPath =
 
 router.use("/", express.static(wwwrootPath));
 
-
-router.use("/transperth", transperth);
-
+// transperth router handles api/transperth,
+// and adding state to res.locals on /transperth route
+// so our react app can get initial state
+router.use(transperth);
 
 // react router will take over
-router.use("*", reactRenderer);
+router.use(renderReactAppToString);
 
 // error handling
 router.use(async (err, req, res, next) => {
