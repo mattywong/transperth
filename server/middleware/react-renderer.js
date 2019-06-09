@@ -1,48 +1,11 @@
 import React from "react";
 
-import fs from "fs-extra";
-import path from "path";
-
-import { renderToString, renderToNodeStream } from "react-dom/server";
+import { renderToString } from "react-dom/server";
 import { ServerStyleSheet } from "styled-components";
 
 import serialize from "serialize-javascript";
 
-// export const renderReactAppToNodeStream = async (req, res, next) => {
-//   res.write("<!DOCTYPE html><html><head><title>My Page</title></head><body>");
-//   res.write("<div id='root'>");
-
-//   await import("../../client/src/App.js")
-//     .then(Component => {
-//       const context = {};
-//       const sheet = new ServerStyleSheet();
-
-//       const jsx = sheet.collectStyles(
-//         <StaticRouter location={req.originalUrl} context={context}>
-//           <Component.default />
-//         </StaticRouter>
-//       );
-
-//       const stream = sheet.interleaveWithNodeStream(renderToNodeStream(jsx));
-
-//       stream.pipe(
-//         res,
-//         { end: false }
-//       );
-
-//       stream.on("end", () => {
-//         console.log(context);
-//         console.log(res);
-//         // res.status(context.status || 200);
-
-//         res.write("</div>");
-//         res.write(`<script src="/bundle.js"></script>`);
-//         res.write("</body></html>");
-//         return res.end();
-//       });
-//     })
-//     .catch(next);
-// };
+import { minify } from "html-minifier";
 
 export const renderReactAppToString = ({ template }) => async (
   req,
@@ -80,10 +43,21 @@ export const renderReactAppToString = ({ template }) => async (
           </script>
             `;
 
-        const html = template
+        let html = template
           .replace("<!-- STYLES -->", styleTags)
           .replace("<!-- CONTENT -->", app)
           .replace("<!-- SCRIPTS -->", scripts);
+
+        if (process.env.NODE_ENV === "production") {
+          html = minify(html, {
+            removeAttributeQuotes: true,
+            collapseWhitespace: true,
+            collapseInlineTagWhitespace: true,
+            collapseBooleanAttributes: true,
+            minifyJS: true,
+            minifyCSS: true
+          });
+        }
 
         res.status(context.status || 200);
         res.send(html);
