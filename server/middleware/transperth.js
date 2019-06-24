@@ -12,9 +12,13 @@ async function fetchTransperth(url, query) {
 
   return fetch(`${API_URL}/${url}?${queryString}`)
     .then(res => {
+
+      console.log(res.json())
       if (res.ok) {
         return res.json();
       }
+
+
     })
     .then(data => {
       console.log(data);
@@ -32,9 +36,9 @@ const transperthMiddleware = async (req, res, next) => {
     {
       ApiKey: API_KEY,
       Time: dayjs().format("YYYY-MM-DDTHH:mm"),
-      format: "json"
+      format: "json",
     },
-    qs.parse(search)
+    qs.parse(search),
   );
 
   console.log(query);

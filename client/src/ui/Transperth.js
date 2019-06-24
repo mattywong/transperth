@@ -2,34 +2,34 @@ import React from "react";
 import dayjs from "dayjs";
 
 import { Link, Route } from "react-router-dom";
-import ServerContext from "../state/ServerContext";
+import { ServerContext } from "../state/ServerContext";
 
 const reducer = (state, action) => {
   switch (action.type) {
     case "SET_IS_SERVER":
       return {
         ...state,
-        isServer: action.payload.isServer
+        isServer: action.payload.isServer,
       };
     case "FETCH_DATA_START":
       return {
         ...state,
         loading: true,
-        error: false
+        error: false,
       };
 
     case "FETCH_DATA_SUCCESS":
       return {
         ...state,
         loading: false,
-        data: action.payload.data
+        data: action.payload.data,
       };
 
     case "FETCH_DATA_ERROR":
       return {
         ...state,
         loading: false,
-        error: action.error
+        error: action.error,
       };
     default:
       return state;
@@ -48,7 +48,7 @@ const Transperth = props => {
     data: serverState.transperth || null,
     loading: !serverState.transperth,
     error: false,
-    isServer: !!serverState.transperth
+    isServer: !!serverState.transperth,
   });
 
   const { deleteStateKey } = serverState;
@@ -62,8 +62,8 @@ const Transperth = props => {
     dispatch({
       type: "SET_IS_SERVER",
       payload: {
-        isServer: false
-      }
+        isServer: false,
+      },
     });
   }, [dispatch]);
 
@@ -75,7 +75,7 @@ const Transperth = props => {
     console.log(url);
 
     dispatch({
-      type: "FETCH_DATA_START"
+      type: "FETCH_DATA_START",
     });
 
     const getData = async () => {
@@ -90,8 +90,8 @@ const Transperth = props => {
       dispatch({
         type: "FETCH_DATA_SUCCESS",
         payload: {
-          data
-        }
+          data,
+        },
       });
     });
   }, [serverState, deleteStateKey, dispatch, location, url, search, isServer]);

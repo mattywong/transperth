@@ -17,6 +17,7 @@
     "compression": "^1.7.4",
     "dayjs": "^1.8.14",
     "express": "^4.16.4",
+    "faker": "^4.1.0",
     "fs-extra": "^8.0.1",
     "html-minifier": "^4.0.0",
     "isomorphic-unfetch": "^3.0.0",
@@ -26,8 +27,13 @@
     "react-hot-loader": "^4.8.8",
     "react-router": "^5.0.1",
     "react-router-dom": "^5.0.1",
+    "react-spring": "^8.0.23",
+    "react-three-fiber": "^2.2.4",
+    "recompose": "^0.30.0",
+    "sanitize.css": "^10.0.0",
     "serialize-javascript": "^1.7.0",
     "styled-components": "^4.2.1",
+    "three": "^0.105.2",
     "ws": "^7.0.0"
   },
   "devDependencies": {
